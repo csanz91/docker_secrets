@@ -12,7 +12,15 @@ def getDocketSecrets(name, secretsPath=os.path.abspath(os.path.join(os.sep, "run
     :raises ValueError: if the secrets cannot be parsed
     :raises IOError: if [secretsPath] cannot be opened
     :raises KeyError: if [name] nof found in the secrets
+
+    To load the secrets from the local machine, set the environment variable LOCAL_SECRETS to a json object
+    with open('../secrets', 'r') as file:
+        os.environ["LOCAL_SECRETS"] = file.read()
     """
+
+    if os.getenv('LOCAL_SECRETS'):
+        secrets = json.loads(os.getenv('LOCAL_SECRETS'))
+        return secrets[name]
 
     secretsFile = os.listdir(secretsPath)[0]
     secretsFilePath = os.path.join(secretsPath, secretsFile)

@@ -36,3 +36,13 @@ def test_get_docker_secrets_io_error():
     with patch("os.listdir", side_effect=IOError):
         with pytest.raises(IOError):
             getDocketSecrets("my_secret")
+
+def test_get_docker_secrets_local_env():
+    secret_name = "my_secret"
+    secret_value = "secret_value"
+    secrets = {secret_name: secret_value}
+    secrets_json = json.dumps(secrets)
+
+    with patch.dict("os.environ", {"LOCAL_SECRETS": secrets_json}):
+        result = getDocketSecrets(secret_name)
+        assert result == secret_value
