@@ -19,9 +19,9 @@ To use the package, import it in your Python code:
 
 .. code-block:: python
 
-    from docker_secrets import getDocketSecrets
+    from docker_secrets import get_docket_secrets
 
-    secret_value = getDocketSecrets('my_secret')
+    secret_value = get_docket_secrets('my_secret')
 
 Contributing
 ------------

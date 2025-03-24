@@ -3,7 +3,7 @@ import json
 
 root = os.path.abspath(os.sep)
 
-def getDocketSecrets(name, secretsPath=os.path.abspath(os.path.join(os.sep, "run", "secrets"))):
+def get_docket_secrets(name, secretsPath=os.path.abspath(os.path.join(os.sep, "run", "secrets"))):
     """This function fetches a docker secret
 
     :param name: the name of the docker secret
@@ -28,3 +28,5 @@ def getDocketSecrets(name, secretsPath=os.path.abspath(os.path.join(os.sep, "run
     with open(secretsFilePath) as f:
         secrets = json.load(f)
     return secrets[name]
+
+getDocketSecrets = get_docket_secrets
