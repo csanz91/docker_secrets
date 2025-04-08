@@ -4,16 +4,18 @@ import json
 root = os.path.abspath(os.sep)
 
 
-def _get_secrets_file(
-    secrets_path: str = os.path.abspath(os.path.join(os.sep, "run", "secrets")),
-) -> dict[str, str]:
+def _get_secrets_file(secrets_path: str | None) -> dict[str, str]:
     """This function reads and returns the secrets from a file or directory
-    
+
     :param secrets_path: path to either a json file with secrets or a directory containing secret files
     :returns: dictionary of secrets
     :raises IOError: if secrets_path cannot be accessed
     :raises ValueError: if the secrets JSON cannot be parsed
     """
+
+    if secrets_path is None:
+        secrets_path = os.path.abspath(os.path.join(os.sep, "run", "secrets"))
+        
     try:
         if os.path.isdir(secrets_path):
             list_of_files = os.listdir(secrets_path)
@@ -23,10 +25,10 @@ def _get_secrets_file(
             secrets_file_path = os.path.join(secrets_path, secrets_file)
         else:
             secrets_file_path = secrets_path
-            
+
         with open(secrets_file_path) as f:
             secrets = json.load(f)
-            
+
         return secrets
     except json.JSONDecodeError as e:
         raise ValueError(f"Failed to parse secrets JSON: {str(e)}")
@@ -86,7 +88,7 @@ def load_selective_secrets(
     missing_secrets = [name for name in names if name not in secrets]
     if missing_secrets:
         raise KeyError(f"Secrets not found: {', '.join(missing_secrets)}")
-        
+
     for name in names:
         os.environ[name] = str(secrets[name])
 
