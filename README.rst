@@ -19,9 +19,15 @@ To use the package, import it in your Python code:
 
 .. code-block:: python
 
-    from docker_secrets import get_docket_secrets
+    from docker_secrets import get_docket_secrets, load_all_secrets, load_selective_secrets
 
     secret_value = get_docket_secrets('my_secret')
+
+    # Load all secrets into environment variables
+    load_all_secrets()
+
+    # Load selective secrets into environment variables
+    load_selective_secrets(['my_secret', 'another_secret'])
 
 Contributing
 ------------
