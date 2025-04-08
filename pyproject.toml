@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dockersecrets"
-version = "0.0.1"
+version = "0.0.2"
 description = "Tool to read the Docker Secrets"
 readme = "README.rst"
 authors = [{name = "csm", email = "cesarsanz.91@gmail.com"}]
