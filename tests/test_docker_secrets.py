@@ -100,3 +100,41 @@ def test_load_selective_secrets_missing():
     with patch("docker_secrets._get_secrets_file", return_value=secrets):
         with pytest.raises(KeyError):
             load_selective_secrets(["missing_secret"])
+
+def test_get_secrets_file_with_env_var():
+    secrets = {"my_secret": "secret_value"}
+    secrets_json = json.dumps(secrets)
+    os.environ["SECRETS_PATH"] = "/path/to/secrets.json"
+
+    with patch("builtins.open", mock_open(read_data=secrets_json)):
+        with patch("os.path.isdir", return_value=False):
+            result = _get_secrets_file(None)
+            assert result == secrets
+
+def test_get_docker_secrets_valid_with_env_var():
+    secret_name = "my_secret"
+    secret_value = "secret_value"
+    secrets = {secret_name: secret_value}
+    os.environ["SECRETS_PATH"] = "/path/to/secrets.json"
+
+    with patch("docker_secrets._get_secrets_file", return_value=secrets):
+        result = get_docker_secrets(secret_name)
+        assert result == secret_value
+
+def test_load_all_secrets_with_env_var():
+    secrets = {"my_secret": "secret_value", "another_secret": "another_value"}
+    os.environ["SECRETS_PATH"] = "/path/to/secrets.json"
+
+    with patch("docker_secrets._get_secrets_file", return_value=secrets):
+        load_all_secrets()
+        assert os.environ["my_secret"] == "secret_value"
+        assert os.environ["another_secret"] == "another_value"
+
+def test_load_selective_secrets_with_env_var():
+    secrets = {"my_secret": "secret_value", "another_secret": "another_value"}
+    os.environ["SECRETS_PATH"] = "/path/to/secrets.json"
+
+    with patch("docker_secrets._get_secrets_file", return_value=secrets):
+        load_selective_secrets(["my_secret"])
+        assert os.environ["my_secret"] == "secret_value"
+        assert "another_secret" not in os.environ
