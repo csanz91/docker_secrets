@@ -14,7 +14,7 @@ def _get_secrets_file(secrets_path: str | None) -> dict[str, str]:
     """
 
     if secrets_path is None:
-        secrets_path = os.path.abspath(os.path.join(os.sep, "run", "secrets"))
+        secrets_path = os.getenv("SECRETS_PATH", os.path.abspath(os.path.join(os.sep, "run", "secrets")))
         
     try:
         if os.path.isdir(secrets_path):
@@ -57,7 +57,7 @@ def get_docker_secrets(
 
 
 def load_all_secrets(
-    secrets_path: str = os.path.abspath(os.path.join(os.sep, "run", "secrets")),
+    secrets_path: str = None,
 ) -> None:
     """This function loads all docker secrets into environment variables
 
@@ -73,7 +73,7 @@ def load_all_secrets(
 
 def load_selective_secrets(
     names: list[str],
-    secrets_path: str = os.path.abspath(os.path.join(os.sep, "run", "secrets")),
+    secrets_path: str = None,
 ) -> None:
     """This function loads selective docker secrets into environment variables
 
